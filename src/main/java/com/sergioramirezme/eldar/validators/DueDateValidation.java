@@ -5,15 +5,13 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
-        ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = DueDateValidator.class)
 @Documented
 public @interface DueDateValidation {
 
-    String message() default "must be a valid issue date." +
-            " found: ${validatedValue}";
+    String message() default "{payments.validation.msg.duedate}";
 
     Class<?>[] groups() default {};
 

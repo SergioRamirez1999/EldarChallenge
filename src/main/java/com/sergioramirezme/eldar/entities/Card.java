@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(
@@ -20,7 +21,6 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Card {
 
     @Id
@@ -41,27 +41,17 @@ public class Card {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    //Metodo para obtener toda la información de una tarjeta
-    public String getInfo() {
-        //Generar un "toString" que contenga todos los campos y la lógica para calcular su tasa
-        String info = "";
 
-        return info;
-    }
-
-    //Metodo para saber si una operacion es valida basada sólo en su amount (max 1000)
     public boolean isValidPayment(double amount) {
         return amount < 1000;
     }
 
-    //Metodo para saber si la tarjeta es válida para operar sólo basándose en su fecha de expiración
     public boolean isValid() {
         return LocalDate.now().isBefore(dueDate);
     }
 
 
-    //Metodo para saber si las tarjetas son iguales
-    public boolean areCardsSame(Card card) {
+    public boolean isSameCard(Card card) {
         return this.equals(card);
     }
 
@@ -76,5 +66,17 @@ public class Card {
     @Override
     public int hashCode() {
         return Objects.hash(brand, number, cardHolder, dueDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "id=" + id +
+                ", brand=" + brand +
+                ", number='" + number + '\'' +
+                ", cardHolder='" + cardHolder + '\'' +
+                ", dueDate=" + dueDate + '\'' +
+                ", feeExpression=" + brand.getFee().getExpression() + '\'' +
+                '}';
     }
 }

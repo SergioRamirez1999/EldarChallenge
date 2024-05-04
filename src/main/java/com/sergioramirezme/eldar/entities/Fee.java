@@ -1,10 +1,16 @@
 package com.sergioramirezme.eldar.entities;
 
-import com.sergioramirezme.eldar.enums.OperatorFeeEnum;
+import com.sergioramirezme.eldar.utils.NashornUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="fees")
@@ -17,23 +23,11 @@ public class Fee {
     @Column(name = "id_fee")
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "operator")
-    private OperatorFeeEnum operator;
+    @Column(name = "math_expression")
+    private String expression;
 
-    @Column(name = "base_value")
-    private Double base_value;
-
-    @Column(name = "use_day")
-    private Boolean day;
-
-    @Column(name = "use_month")
-    private Boolean month;
-
-    @Column(name = "use_year")
-    private Boolean year;
-
-
-    //agregar metodo para calcular el fee en base a los datos de esta entidad. Utilizar alguna clase utilitaria.
+    @ToString.Exclude
+    @OneToMany(mappedBy = "fee", fetch = FetchType.EAGER)
+    private List<ArgumentExpression> arguments;
 
 }

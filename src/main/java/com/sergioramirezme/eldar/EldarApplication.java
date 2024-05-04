@@ -1,7 +1,10 @@
 package com.sergioramirezme.eldar;
 
+import com.sergioramirezme.eldar.business.PaymentBO;
+import com.sergioramirezme.eldar.dtos.PaymentFeeInquiryReqDTO;
+import com.sergioramirezme.eldar.dtos.PaymentFeeInquiryResDTO;
 import com.sergioramirezme.eldar.entities.Card;
-import com.sergioramirezme.eldar.repositories.IPaymentRepository;
+import com.sergioramirezme.eldar.repositories.ICardRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +12,21 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.TimeZone;
 
 @SpringBootApplication
 @Data
 public class EldarApplication {
 
-	private IPaymentRepository paymentRepository;
+	private ICardRepository paymentRepository;
+	private PaymentBO paymentBO;
 
 	@Autowired
-	public EldarApplication(IPaymentRepository paymentRepository) {
+	public EldarApplication(ICardRepository paymentRepository, PaymentBO paymentBO) {
 		this.paymentRepository = paymentRepository;
+		this.paymentBO = paymentBO;
 	}
 
 	@PostConstruct
@@ -31,10 +38,42 @@ public class EldarApplication {
 
 		ConfigurableApplicationContext context = SpringApplication.run(EldarApplication.class, args);
 
-		IPaymentRepository paymentRepository = context.getBean(IPaymentRepository.class);
-		Card visa = paymentRepository.findByBrandName("VISA");
-		Card nara = paymentRepository.findByBrandName("NARA");
-		Card amex = paymentRepository.findByBrandName("AMEX");
+		ICardRepository paymentRepository = context.getBean(ICardRepository.class);
+		PaymentBO paymentBO = context.getBean(PaymentBO.class);
+
+		Card visa = paymentRepository.findByNumberAndDueDateAndBrandName("1111 1111 1111 1111", LocalDate.of(2022, 9, 11), "VISA");
+		Card nara = paymentRepository.findByNumberAndDueDateAndBrandName("2222 2222 2222 2222", LocalDate.of(2026, 9, 11), "NARA");
+		Card amex = paymentRepository.findByNumberAndDueDateAndBrandName("3333 3333 3333 3333", LocalDate.of(2026, 9, 11), "AMEX");
+
+		showCardInfo(visa, visa, paymentBO, 850);
+		showCardInfo(nara, visa, paymentBO, 1024);
+		showCardInfo(amex, nara, paymentBO, 1000);
+
+
+	}
+
+	private static void showCardInfo(Card card, Card c2, PaymentBO paymentBO, double amount) {
+		System.out.println(card);
+		System.out.println(MessageFormat.format("Pago de {0}: ", amount).concat(card.isValidPayment(amount) ? "válido" : "no válido"));
+		System.out.println("Estado de expiración: " + (card.isValid() ? "no expirada" : "expirada"));
+		System.out.println("Tarjetas iguales: " + card.isSameCard(c2));
+
+		try {
+			String brand = card.getBrand().getName();
+
+			PaymentFeeInquiryResDTO paymentFeeInquiryResDTO = paymentBO.inquiryFee(
+					PaymentFeeInquiryReqDTO.builder()
+							.brand(brand)
+							.amount(amount)
+							.build());
+
+			System.out.println(
+					MessageFormat.format("Tasa de operacion con tarjeta {0} y monto {1}: ", brand, amount)
+							+ paymentFeeInquiryResDTO.getFee());
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 
