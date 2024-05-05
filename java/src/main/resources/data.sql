@@ -21,6 +21,6 @@ INSERT INTO brand_card (name, id_fee) VALUES ('VISA', 1);
 INSERT INTO brand_card (name, id_fee) VALUES ('NARA', 2);
 INSERT INTO brand_card (name, id_fee) VALUES ('AMEX', 3);
 
-INSERT INTO cards (id_brand, number, card_holder, due_date) VALUES (1, '1111 1111 1111 1111', 'Perez Juan', '2022-09-11');
+INSERT INTO cards (id_brand, number, card_holder, due_date) VALUES (1, '1111 1111 1111 1111', 'Juan Perez', '2022-09-11');
 INSERT INTO cards (id_brand, number, card_holder, due_date) VALUES (2, '2222 2222 2222 2222', 'Maria Almeria', '2026-09-11');
 INSERT INTO cards (id_brand, number, card_holder, due_date) VALUES (3, '3333 3333 3333 3333', 'Alfonso Ortiz', '2026-09-11');

@@ -24,7 +24,7 @@ public class PaymentResource {
         this.paymentBO = paymentBO;
     }
 
-    @GetMapping("/consult-fee")
+    @PostMapping("/consult-fee")
     public ResponseEntity<PaymentFeeInquiryResDTO> inquiryFee(@Valid @RequestBody PaymentFeeInquiryReqDTO paymentFeeInquiryReqDTO) throws BusinessException {
         PaymentFeeInquiryResDTO paymentFeeInquiryResDTO = paymentBO.inquiryFee(paymentFeeInquiryReqDTO);
         return ResponseEntity.ok(paymentFeeInquiryResDTO);

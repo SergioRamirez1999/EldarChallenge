@@ -17,17 +17,7 @@ import java.time.LocalDate;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@Data
 public class EldarApplication {
-
-	private ICardRepository paymentRepository;
-	private PaymentBO paymentBO;
-
-	@Autowired
-	public EldarApplication(ICardRepository paymentRepository, PaymentBO paymentBO) {
-		this.paymentRepository = paymentRepository;
-		this.paymentBO = paymentBO;
-	}
 
 	@PostConstruct
 	void started() {

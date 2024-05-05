@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
-public class DueDateValidator implements ConstraintValidator<CardValidation, CardDTO> {
+public class CardValidator implements ConstraintValidator<CardValidation, CardDTO> {
 
 
     private ICardRepository cardRepository;
 
     @Autowired
-    public DueDateValidator(ICardRepository cardRepository) {
+    public CardValidator(ICardRepository cardRepository) {
         this.cardRepository = cardRepository;
     }
 

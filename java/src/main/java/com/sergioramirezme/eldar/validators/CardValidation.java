@@ -7,11 +7,11 @@ import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DueDateValidator.class)
+@Constraint(validatedBy = CardValidator.class)
 @Documented
 public @interface CardValidation {
 
-    String message() default "{payments.validation.msg.duedate}";
+    String message() default "{payments.validation.msg.duedate.expiration}";
 
     Class<?>[] groups() default {};
 

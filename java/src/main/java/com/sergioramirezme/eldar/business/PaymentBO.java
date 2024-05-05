@@ -4,6 +4,7 @@ import com.sergioramirezme.eldar.dtos.PaymentDTO;
 import com.sergioramirezme.eldar.dtos.PaymentFeeInquiryReqDTO;
 import com.sergioramirezme.eldar.dtos.PaymentFeeInquiryResDTO;
 import com.sergioramirezme.eldar.entities.ArgumentExpression;
+import com.sergioramirezme.eldar.entities.BrandCard;
 import com.sergioramirezme.eldar.entities.Fee;
 import com.sergioramirezme.eldar.exceptions.BusinessException;
 import com.sergioramirezme.eldar.repositories.IBrandCardRepository;
@@ -28,8 +29,12 @@ public class PaymentBO {
     }
 
     public PaymentFeeInquiryResDTO inquiryFee(PaymentFeeInquiryReqDTO paymentFeeInquiryReqDTO) throws BusinessException {
-        Fee feeEntity = brandCardRepository.findByName(paymentFeeInquiryReqDTO.getBrand()).getFee();
-        double fee = calculateFee(feeEntity, paymentFeeInquiryReqDTO.getAmount());
+        BrandCard brandCard = brandCardRepository.findByName(paymentFeeInquiryReqDTO.getBrand());
+
+        if(brandCard == null)
+            throw new BusinessException("Los datos ingresados no corresponden a una tarjeta en servicio.");
+
+        double fee = calculateFee(brandCard.getFee(), paymentFeeInquiryReqDTO.getAmount());
         return PaymentFeeInquiryResDTO.builder()
                 .fee(fee)
                 .build();
@@ -51,7 +56,8 @@ public class PaymentBO {
             double fee = NashornUtils.eval_expression(feeEntity.getExpression(), argname_value);
             return amount * (fee / 100);
         } catch (ScriptException e) {
-            throw new BusinessException(e);
+            e.printStackTrace();
+            throw new BusinessException("Ocurrió un error al evaluar la expresión de tasa.");
         }
 
     }
