@@ -1,8 +1,7 @@
 package com.sergioramirezme.eldar.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sergioramirezme.eldar.validators.DueDateValidation;
-import jakarta.validation.constraints.NotBlank;
+import com.sergioramirezme.eldar.validators.CardValidation;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@DueDateValidation
+@CardValidation
 public class CardDTO {
 
     @JsonProperty("brand")

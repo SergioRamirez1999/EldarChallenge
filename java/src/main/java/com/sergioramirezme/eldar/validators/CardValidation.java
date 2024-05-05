@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = DueDateValidator.class)
 @Documented
-public @interface DueDateValidation {
+public @interface CardValidation {
 
     String message() default "{payments.validation.msg.duedate}";
 

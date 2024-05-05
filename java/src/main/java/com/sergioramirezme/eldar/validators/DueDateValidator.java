@@ -8,9 +8,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-public class DueDateValidator implements ConstraintValidator<DueDateValidation, CardDTO> {
+public class DueDateValidator implements ConstraintValidator<CardValidation, CardDTO> {
 
 
     private ICardRepository cardRepository;
@@ -21,7 +20,7 @@ public class DueDateValidator implements ConstraintValidator<DueDateValidation, 
     }
 
     @Override
-    public void initialize(DueDateValidation constraintAnnotation) {
+    public void initialize(CardValidation constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
@@ -30,8 +29,13 @@ public class DueDateValidator implements ConstraintValidator<DueDateValidation, 
 
         Card card = cardRepository.findByNumberAndDueDateAndBrandName(dto.getNumber(), dto.getDueDate(), dto.getBrand());
 
-        if (card == null)
+        if (card == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("{payments.validation.msg.card.notfound}")
+                    .addConstraintViolation();
             return false;
+        }
+
 
         return LocalDate.now().isBefore(card.getDueDate());
 
